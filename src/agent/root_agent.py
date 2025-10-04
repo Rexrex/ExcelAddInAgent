@@ -13,7 +13,6 @@ from src.utils.load_utils import load_all
 class BaseAgent():
     agent = None
     langfuse = None
-    tools = None
     
     def __init__(self, instructions, llm_model, langfuse, logger=None):
 
@@ -37,11 +36,16 @@ class BaseAgent():
 if __name__ == "__main__":
     try:
         llm_model, langfuse, logger = load_all()
-        instructions = "Be Concise. Answer the question as best as you can."
+        instructions = "Your are the Root Agent. Be Concise. Answer the question as best as you can."
         simple_agent = BaseAgent(llm_model=llm_model, langfuse=langfuse, instructions=None, logger=logger)
+        chef_agent = Agent(llm_model, instructions="Your are a chef in a 3 star Michelin hotel", instrument=True)
         user_request = input("Enter your question: ")
         result = asyncio.run(simple_agent.run(user_request))
         print(f"Agent Reply: {result}")
+
+        user_chef_request = input("Enter your cooking question: ")
+        result = asyncio.run(chef_agent.run(user_chef_request)) 
+        print(f"Chef Agent Reply: {result}")
 
     except Exception as e:
         logger.error(f"Startup Failed: {e}")
