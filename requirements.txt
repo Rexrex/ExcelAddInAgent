@@ -1,4 +1,4 @@
-pydantic-python
+pydantic-ai
 uvicorn
 dotenv
 langfuse
