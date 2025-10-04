@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
 import dotenv
+from src.agent.simple_agent import llm_chat
 
 dotenv.load_dotenv()
 
@@ -37,7 +38,8 @@ class ChatRequest(BaseModel):
 async def chat(body: ChatRequest, x_api_key: str = Header(...)):
     if x_api_key != API_KEY:
         return {"error": "Unauthorized"}, 401
-    reply = f"Echo: {body.message}"
+    reply = await llm_chat(body.message)
+    print(f"Reply:{reply}")
     print(f"UserID: {body.user_id}, Message: {body.message}, Reply: {reply}")
     return {"reply": reply}
 
