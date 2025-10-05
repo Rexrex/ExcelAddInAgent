@@ -5,3 +5,4 @@ langfuse
 asyncio
 tavily-python
 fastapi[standard]
+pydantic-ai-slim[duckduckgo]

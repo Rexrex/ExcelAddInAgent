@@ -2,7 +2,8 @@ import os
 import asyncio
 
 from pydantic_ai import Agent, RunContext, UsageLimits
-from pydantic_ai.common_tools.tavily import tavily_search_tool, duckduckgo_search_tool
+from pydantic_ai.common_tools.tavily import tavily_search_tool
+from pydantic_ai.common_tools.duckduckgo import duckduckgo_search_tool
 from datetime import date
 from src.agent.report_generation_agent import initialize_report_agent
 from src.utils.load_utils import BasicConfig
