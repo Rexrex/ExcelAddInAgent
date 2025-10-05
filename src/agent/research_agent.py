@@ -23,7 +23,7 @@ def generate_root_agent(llm_model, web_search_agent=None, summary_agent=None, re
     logger.info("Root Base Initialization successful")
 
     if web_search_agent:
-        usage_limits = UsageLimits(request_limit=2)  
+        usage_limits = UsageLimits(request_limit=5)  
         @root_agent.tool
         async def web_search(ctx: RunContext[str], query: str) -> str:
             """Use this tool to perform web searches and retrieve up-to-date information from the web."""
@@ -38,7 +38,7 @@ def generate_root_agent(llm_model, web_search_agent=None, summary_agent=None, re
             return result.output
         
     if report_generation_agent:
-        usage_limits = UsageLimits(request_limit=2)  
+        usage_limits = UsageLimits(request_limit=5)  
         @root_agent.tool
         async def generate_final_report(ctx: RunContext[str], content: str) -> str:
             """Use this tool to summarize lengthy content into concise summaries."""

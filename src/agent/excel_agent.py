@@ -21,17 +21,17 @@ def generate_excel_agent(llm_model, langfuse=None, logger=None):
         excel_agent_prompt = langfuse.get_prompt("excel_agent_system_prompt")
         if excel_agent_prompt:          
 
-            with open("excel_formulas.yaml", "r") as f:
+            with open("src/agent/knowledge/excel_kb.yaml", "r") as f:
                 excel_knowledge = yaml.safe_load(f)
                 instruction_examples = format_excel_knowledge(excel_knowledge)
-                excel_agent_intructions.compile(instruction_examples=instruction_examples)
-                excel_agent_intructions = excel_agent_prompt.prompt
+                excel_agent_prompt.compile(instruction_examples=instruction_examples)
+                excel_agent_instructions = excel_agent_prompt.prompt
        
     excel_agent = Agent(llm_model, instructions=excel_agent_instructions, instrument=True, output_type=ExcelOutput)
     logger.info("Excel Agent Initialization successful")
 
     @excel_agent.tool
-    def compute_formula(formula: str, inputs: dict[str, float]) -> float:
+    def compute_formula(ctx: RunContext[str], formula: str, inputs: dict[str, float]) -> float:
         """
         Compute a simple Excel formula using given inputs.
 
