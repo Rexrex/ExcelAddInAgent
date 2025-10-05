@@ -39,7 +39,7 @@ def generate_routing_agent(llm_model, research_agent=None, excel_agent=None, lan
         @rooting_agent.tool
         async def excel_queries(ctx: RunContext[str], content: str) -> str:
             """Use this tool to handle excel specific queries."""
-            result = await excel_agent.run(content, message_history=ctx.messages)
+            result = await excel_agent.run(content)
             logger.info(f"Excel Agent returned: \n {result.output}")
             return result.output
 
