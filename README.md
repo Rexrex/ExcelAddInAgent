@@ -10,38 +10,7 @@ ExcelAddInAgent is a multi-agent AI system that intelligently routes user reques
 - **Excel Agent**: Expert in Microsoft Excel operations, formulas, and data analysis
 - **Research Agent**: Performs web searches and gathers information using Tavily and DuckDuckGo
 - **Report Generation Agent**: Creates comprehensive reports and summaries from collected data
-
-## Architecture
-```
-                          ┌─────────────────┐
-                          │   User Request  │
-                          └─────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                       ┌──────────────────┐                          │
-│                       │  Router Agent     │                          │
-│                       │                  │                          │
-│                       │ • Analyzes request content                   │
-│                       │ • Determines routing logic                   │
-│                       │ • Maintains conversation context            │
-│                       └──────────────────┘                          │
-└─────────────────────────────────────────────────────────────────────┘
-                                    │
-          ┌─────────────────────────┼─────────────────────────┐
-          │                         │                         │
-          ▼                         ▼                         ▼
-┌─────────────────┐    ┌─────────────────────────────────────────────┐
-│   Excel Agent   │    │          Research Agent                     │
-│                 │    │                                             │
-│ • Excel formulas│    │ • Web searches (Tavily/DuckDuckGo)          │
-│ • Data analysis │    │ • Information gathering                     │
-│ • Step-by-step  │    │ • Report generation      ▲                  │
-│   instructions  │    │ • Creates summaries      │                  │
-│                 │    │ • Next steps            │                  │
-└─────────────────┘    └─────────────────────────────────────────────┘
-```
-
+  
 ## Features
 
 ### Core Functionality
