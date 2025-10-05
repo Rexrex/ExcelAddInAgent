@@ -19,9 +19,8 @@ def generate_excel_agent(llm_model, langfuse=None, logger=None):
 
     if langfuse:
         excel_agent_prompt = langfuse.get_prompt("excel_agent_system_prompt")
-        if excel_agent_prompt:
-             excel_agent_instructions = excel_agent_prompt.prompt
-             
+        if excel_agent_prompt:          
+
             with open("excel_formulas.yaml", "r") as f:
                 excel_knowledge = yaml.safe_load(f)
                 instruction_examples = format_excel_knowledge(excel_knowledge)
