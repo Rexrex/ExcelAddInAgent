@@ -32,14 +32,15 @@ def generate_routing_agent(llm_model, research_agent=None, excel_agent=None, lan
             result = await research_agent.run(query, usage_limits=usage_limits)
             logger.info("research result attrs=%s", dir(result))
             report = getattr(result, "output", None) or getattr(result, "text", None) or getattr(result, "content", None) or str(result)
-            logger.info("deep_research returning length=%s", len(report))
+            logger.info(f"Research Agent returned: \n {result.output}")
             return result.output
     
     if excel_agent:
         @rooting_agent.tool
         async def excel_queries(ctx: RunContext[str], content: str) -> str:
             """Use this tool to handle excel specific queries."""
-            result = await excel_agent.run(content)
+            result = await excel_agent.run(content, message_history=ctx.messages)
+            logger.info(f"Excel Agent returned: \n {result.output}")
             return result.output
 
     return rooting_agent
