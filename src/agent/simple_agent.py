@@ -1,12 +1,9 @@
-import os
-import dotenv
-import logging
+
 import asyncio
 
 from langfuse import get_client, observe
 from dotenv import load_dotenv
 from pydantic_ai import Agent
-from src.utils.load_utils import load_all
 
 
 ## Initalize the Agent

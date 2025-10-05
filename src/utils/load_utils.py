@@ -11,62 +11,66 @@ from pydantic_ai.providers.openrouter import OpenRouterProvider
 
 load_dotenv()  # Load environment variables from .env file
 
-langfuse = get_client()  # Initialize Langfuse client
-
-OPEN_ROUTER_API_KEY, DEFAULT_MODEL = None, None
-
 Agent.instrument_all()
 
-# Set up logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+class BasicConfig:
+    llm_model = None
+    langfuse = None
+    logger = None
 
-# Set up the Enviroment
-def load_environment():
-    ## Load environment variables from .env file
-    load_dotenv()
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
 
-    OPEN_ROUTER_API_KEY=os.getenv('OPEN_ROUTER_KEY')
-    if not OPEN_ROUTER_API_KEY:
-        logger.error("OPEN_ROUTER_KEY environment variable is not set")
-        raise ValueError("OPEN_ROUTER_KEY environment variable is not set")
+    def __init__(self):
+        OPEN_ROUTER_API_KEY, DEFAULT_MODEL = self.load_environment()
+        self.initialize_langfuse()
+        self.load_llm_model(OPEN_ROUTER_API_KEY, DEFAULT_MODEL)
+        self.logger.info("Setup complete")
 
-    DEFAULT_MODEL = os.getenv('DEFAULT_MODEL', 'deepseek/deepseek-chat-v3.1:free')
-    assert DEFAULT_MODEL is not None, "DEFAULT_MODEL environment variable is not set"
+    # Set up the Enviroment
+    def load_environment(self):
+        ## Load environment variables from .env file
+        load_dotenv()
 
-    logger.info("Environment variables loaded successfully")
-    return OPEN_ROUTER_API_KEY, DEFAULT_MODEL
+        OPEN_ROUTER_API_KEY=os.getenv('OPEN_ROUTER_KEY')
+        if not OPEN_ROUTER_API_KEY:
+            self.logger.error("OPEN_ROUTER_KEY environment variable is not set")
+            raise ValueError("OPEN_ROUTER_KEY environment variable is not set")
 
-# Load Langfuse
-def initialize_langfuse():
-    try:
-        langfuse = get_client()
-        logger.info("Langfuse client initialized successfully")
-        return langfuse
-    except Exception as e:
-        logger.exception("Failed to initialize Langfuse client")
-        raise e
-    
+        CHOSEN_MODEL = os.getenv('CHOSEN_MODEL', 'DEEPSEEK')
+        assert CHOSEN_MODEL in ['DEEPSEEK', 'Z-AI', 'GEMINI'], "CHOSEN_MODEL must be either 'DEEPSEEK' or 'Z-AI'"
+        if CHOSEN_MODEL == 'DEEPSEEK':
+             DEFAULT_MODEL = os.getenv('DEEPSEEK', 'deepseek/deepseek-chat-v3.1:free')
+        elif CHOSEN_MODEL == 'Z-AI':
+             DEFAULT_MODEL = os.getenv('Z-AI', 'z-ai/glm-4.5-air:free')
+        elif CHOSEN_MODEL == 'GEMINI':
+             DEFAULT_MODEL = os.getenv('GEMINI', 'google/gemini-2.5-flash-lite-preview-09-2025')
 
-def load_llm_model(OPEN_ROUTER_API_KEY, DEFAULT_MODEL):
-    model = OpenAIChatModel(DEFAULT_MODEL,
-        provider=OpenRouterProvider(api_key=OPEN_ROUTER_API_KEY),
-        )
-    return model
+        assert DEFAULT_MODEL is not None, "DEFAULT_MODEL environment variable is not set"
 
+        self.logger.info("Environment variables loaded successfully")
+        return OPEN_ROUTER_API_KEY, DEFAULT_MODEL
 
-def load_all():
-    OPEN_ROUTER_API_KEY, DEFAULT_MODEL = load_environment()
-    langfuse =  initialize_langfuse()
-    llm_model= load_llm_model(OPEN_ROUTER_API_KEY, DEFAULT_MODEL)
-    logger.info("Setup complete")
-    return llm_model, langfuse, logger
+    # Load Langfuse
+    def initialize_langfuse(self):
+        try:
+            self.langfuse = get_client()
+            self.logger.info("Langfuse client initialized successfully")
+        except Exception as e:
+            self.logger.exception("Failed to initialize Langfuse client")
+            raise e
+        
+
+    def load_llm_model(self, OPEN_ROUTER_API_KEY, DEFAULT_MODEL):
+        self.llm_model = OpenAIChatModel(DEFAULT_MODEL,
+            provider=OpenRouterProvider(api_key=OPEN_ROUTER_API_KEY),
+            )
+
 
 if __name__ == "__main__":
     try:
-       load_all()
+        config = BasicConfig()
     except Exception as e:
-        logger.error(f"Startup Failed: {e}")
         exit(1) 
 
     

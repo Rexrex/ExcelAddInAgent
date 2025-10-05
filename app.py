@@ -3,7 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
 import dotenv
-from src.agent.root_agent import initialize_agent
+from src.agent.router_agent import initialize_routing_agent
+from src.utils.load_utils import BasicConfig
 
 dotenv.load_dotenv()
 
@@ -33,13 +34,14 @@ class ChatRequest(BaseModel):
     message: str
     user_id: str | None = None
 
-root_agent = initialize_agent()
+BasicConfig = BasicConfig()
+router_agent = initialize_routing_agent(BasicConfig)
 
 @app.post("/chat")
 async def chat(body: ChatRequest, x_api_key: str = Header(...)):
     if x_api_key != API_KEY:
         return {"error": "Unauthorized"}, 401
-    reply = await root_agent.run(body.message)
+    reply = await router_agent.run(body.message)
     print(f"Reply:{reply.output}")
     print(f"UserID: {body.user_id}, Message: {body.message}, Reply: {reply}")
     return {"reply": reply.output}
