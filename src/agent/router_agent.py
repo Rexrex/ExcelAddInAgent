@@ -16,7 +16,7 @@ def generate_routing_agent(llm_model, research_agent=None, excel_agent=None, lan
 
     if langfuse:
         routing_agent_prompt = langfuse.get_prompt("rooting_agent_system_prompt")
-        if routing_agent_intructions:
+        if routing_agent_prompt:
              routing_agent_intructions = routing_agent_prompt.prompt
        
 
@@ -28,14 +28,19 @@ def generate_routing_agent(llm_model, research_agent=None, excel_agent=None, lan
         @rooting_agent.tool
         async def deep_research(ctx: RunContext[str], query: str) -> str:
             """Use this tool to perform deep research calls."""
+            logger.info("deep_research called with query=%s", query)
             result = await research_agent.run(query, usage_limits=usage_limits)
+            logger.info("research result attrs=%s", dir(result))
+            report = getattr(result, "output", None) or getattr(result, "text", None) or getattr(result, "content", None) or str(result)
+            logger.info(f"Research Agent returned: \n {result.output}")
             return result.output
     
     if excel_agent:
         @rooting_agent.tool
         async def excel_queries(ctx: RunContext[str], content: str) -> str:
             """Use this tool to handle excel specific queries."""
-            result = await excel_agent.run(content)
+            result = await excel_agent.run(content, message_history=ctx.messages)
+            logger.info(f"Excel Agent returned: \n {result.output}")
             return result.output
 
     return rooting_agent
@@ -62,6 +67,8 @@ if __name__ == "__main__":
         user_request = input("Enter your question for the rooting agent: ")
         result = asyncio.run(rooting_agent.run(user_request))
         print(f"Agent Reply: {result.output}")
+        print(f"/n Full Context: \n {result.all_messages}")
+        print(f"/n Full Result: \n {result.all_messages}")
 
     except Exception as e:
         logger.error(f"Startup Failed: {e}")

@@ -3,6 +3,7 @@ import asyncio
 
 from pydantic_ai import Agent, RunContext, UsageLimits
 from pydantic_ai.common_tools.tavily import tavily_search_tool
+from pydantic_ai.common_tools.duckduckgo import duckduckgo_search_tool
 from datetime import date
 from src.agent.report_generation_agent import initialize_report_agent
 from src.utils.load_utils import BasicConfig
@@ -49,15 +50,21 @@ def generate_root_agent(llm_model, web_search_agent=None, summary_agent=None, re
 
 def generate_web_search_agent(llm_model, langfuse=None, logger=None):
      
-    web_search_instructions = "You are a web search agent. Use the Tavily tool to perform web searches and provide accurate information based on the search results."
+    web_search_instructions = "You are a web search agent. Use the Web Search tool to perform web searches and provide accurate information based on the search results."
     if langfuse:
         web_search_instructions = langfuse.get_prompt("web_search_agent_system_prompt").prompt
         
-    # Get API key from environment
-    tavily_api_key = os.getenv('TAVILY_API_KEY')
-    assert tavily_api_key is not None
 
-    web_search_agent = Agent(llm_model, instructions=web_search_instructions, instrument=True,  tools=[tavily_search_tool(tavily_api_key)])
+    tool = os.getenv('WEB_SEARCH_TOOL', 'tavily')
+
+    if tool != 'tavily':
+        web_search_agent = Agent(llm_model, instructions=web_search_instructions, instrument=True,  tools=[duckduckgo_search_tool()])
+    
+    else:
+        # Get API key from environment
+        tavily_api_key = os.getenv('TAVILY_API_KEY')
+        assert tavily_api_key is not None
+        web_search_agent = Agent(llm_model, instructions=web_search_instructions, instrument=True,  tools=[tavily_search_tool(tavily_api_key)])
 
     @web_search_agent.instructions
     def add_the_date() -> str:  

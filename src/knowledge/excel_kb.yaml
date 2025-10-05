@@ -1,0 +1,114 @@
+excel_formulas:
+  SUM:
+    description: "Adds all the numbers in a range of cells."
+    syntax: "SUM(number1, [number2], ...)"
+    arguments:
+      - name: number1
+        type: "number or cell/range reference"
+        required: true
+      - name: number2
+        type: "number or cell/range reference"
+        required: false
+    examples:
+      - formula: "=SUM(A1:A10)"
+        result: "Sum of values in cells A1 through A10"
+      - formula: "=SUM(A1, B1, C1)"
+        result: "Adds values in A1, B1, C1"
+  
+  AVERAGE:
+    description: "Returns the average (arithmetic mean) of its arguments."
+    syntax: "AVERAGE(number1, [number2], ...)"
+    arguments:
+      - name: number1
+        type: "number or cell/range reference"
+        required: true
+      - name: number2
+        type: "number or cell/range reference"
+        required: false
+    examples:
+      - formula: "=AVERAGE(B1:B5)"
+        result: "Average of values in B1 through B5"
+      - formula: "=AVERAGE(10, 20, 30)"
+        result: "Average of 10, 20, 30"
+
+  IF:
+    description: "Checks whether a condition is met, and returns one value if TRUE, and another if FALSE."
+    syntax: "IF(logical_test, value_if_true, value_if_false)"
+    arguments:
+      - name: logical_test
+        type: "expression that evaluates to TRUE or FALSE"
+        required: true
+      - name: value_if_true
+        type: "any type (number, text, etc.)"
+        required: true
+      - name: value_if_false
+        type: "any type (number, text, etc.)"
+        required: true
+    examples:
+      - formula: "=IF(A1 > 10, \"High\", \"Low\")"
+        result: "If A1 is greater than 10 then \"High\" else \"Low\""
+  
+  VLOOKUP:
+    description: "Looks up a value in the first column of a range, and returns a value in the same row from a specified column."
+    syntax: "VLOOKUP(lookup_value, table_array, col_index_num, [range_lookup])"
+    arguments:
+      - name: lookup_value
+        type: "value to look for"
+        required: true
+      - name: table_array
+        type: "range of cells"
+        required: true
+      - name: col_index_num
+        type: "column number in the table from which to retrieve the value"
+        required: true
+      - name: range_lookup
+        type: "TRUE for approximate match or FALSE for exact match"
+        required: false
+    examples:
+      - formula: "=VLOOKUP(\"Alice\", A2:B10, 2, FALSE)"
+        result: "Looks for 'Alice' in A2:A10, returns corresponding value from column B"
+      - formula: "=VLOOKUP(100, D1:F100, 3, TRUE)"
+        result: "Approximate lookup in column D, returns from column F"
+
+  CONCAT:
+    description: "Joins two or more text strings into one string."
+    syntax: "CONCAT(text1, [text2], ...)"
+    arguments:
+      - name: text1
+        type: "text or cell reference"
+        required: true
+      - name: text2
+        type: "text or cell reference"
+        required: false
+    examples:
+      - formula: "=CONCAT(A1, \" \", B1)"
+        result: "Joins content of A1, a space, and content of B1"
+      - formula: "=CONCAT(\"Hello\", \"World\")"
+        result: "HelloWorld"
+
+  TODAY:
+    description: "Returns the current date."
+    syntax: "TODAY()"
+    arguments: []
+    examples:
+      - formula: "=TODAY()"
+        result: "Current date"
+
+  DATE:
+    description: "Returns the serial number that represents a particular date."
+    syntax: "DATE(year, month, day)"
+    arguments:
+      - name: year
+        type: "integer"
+        required: true
+      - name: month
+        type: "integer"
+        required: true
+      - name: day
+        type: "integer"
+        required: true
+    examples:
+      - formula: "=DATE(2025, 10, 5)"
+        result: "Returns the serial number for October 5, 2025"
+      - formula: "=DATE(YEAR(TODAY()),1,1)"
+        result: "First day of current year"
