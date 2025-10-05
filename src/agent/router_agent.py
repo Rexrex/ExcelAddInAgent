@@ -24,7 +24,7 @@ def generate_routing_agent(llm_model, research_agent=None, excel_agent=None, lan
     logger.info("Routing Base Initialization successful")
 
     if research_agent:
-        usage_limits = UsageLimits(request_limit=5)  
+        usage_limits = UsageLimits(request_limit=10)  
         @rooting_agent.tool
         async def deep_research(ctx: RunContext[str], query: str) -> str:
             """Use this tool to perform deep research calls."""

@@ -69,3 +69,17 @@ ExcelAddInAgent is a multi-agent AI system that intelligently routes user reques
    ```bash
    uvicorn app:app --reload --host 0.0.0.0 --port 8000
    ```
+
+
+## Testing
+
+The project includes a comprehensive test suite that validates all agent functionalities:
+
+### Running Tests
+
+```bash
+# Run all agent tests
+python -m pytest tests/
+
+# Or run the comprehensive test suite directly
+python tests/test_agents.py
