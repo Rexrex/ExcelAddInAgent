@@ -2,4 +2,6 @@ pydantic-ai
 uvicorn
 dotenv
 langfuse
+asyncio
+tavily-python
 fastapi[standard]
