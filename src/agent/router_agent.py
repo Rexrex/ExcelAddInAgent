@@ -29,6 +29,7 @@ def generate_routing_agent(llm_model, research_agent=None, excel_agent=None, lan
         async def deep_research(ctx: RunContext[str], query: str) -> str:
             """Use this tool to perform deep research calls."""
             result = await research_agent.run(query, usage_limits=usage_limits, message_history=ctx.messages)
+            logger.info(f"Research Agent returned: \n {result.output}")
             return result.output
     
     if excel_agent:
@@ -36,6 +37,7 @@ def generate_routing_agent(llm_model, research_agent=None, excel_agent=None, lan
         async def excel_queries(ctx: RunContext[str], content: str) -> str:
             """Use this tool to handle excel specific queries."""
             result = await excel_agent.run(content, message_history=ctx.messages)
+            logger.info(f"Excel Agent returned: \n {result.output}")
             return result.output
 
     return rooting_agent
